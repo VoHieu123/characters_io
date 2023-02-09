@@ -1,0 +1,3 @@
+[submodule "utilities/cmsis_interrupt_handling"]
+	path = utilities/cmsis_interrupt_handling
+	url = https://github.com/VoHieu123/cmsis_interrupt_handling
