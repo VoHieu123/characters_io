@@ -1,6 +1,5 @@
-#include "charactersio.hpp"
-
 #include <assert.h>
+#include <CharactersIo.h>
 //#include "interrupt_handling.h"
 #define DECLARE_IRQ_STATE
 #define	ENTER_NO_INTERRUPTS_SECTION()
@@ -10,8 +9,8 @@
 #define XON  0x11u
 #define XOFF 0x13u
 
-/* Todo: Should get two inputs: CharactersIO config and UART config */
-CharactersIO::CharactersIO()
+/* Todo: Should get two inputs: CharactersIo config and UART config */
+CharactersIo::CharactersIo()
 	: mUartHandle(HandleReceivedByte, this)
 	, mBufferReadIndex(0)
 	, mBufferWriteIndex(0)
@@ -21,7 +20,7 @@ CharactersIO::CharactersIO()
 }
 
 /* Todo: Implement macros for debuging */
-int32_t CharactersIO::Write(const void *aBuffer, size_t aCount)
+int32_t CharactersIo::Write(const void *aBuffer, size_t aCount)
 {
 		size_t            sentCount  = 0;
     const uint8_t*    tempBuffer = nullptr;
@@ -63,7 +62,7 @@ int32_t CharactersIO::Write(const void *aBuffer, size_t aCount)
 }
 
 /* Todo: Write documentations and UML to explain the algorithms */
-int32_t CharactersIO::Read(void *aBuffer, size_t aCount)
+int32_t CharactersIo::Read(void *aBuffer, size_t aCount)
 {
     size_t              readCount  = 0;
     uint8_t*            tempBuffer = nullptr;
@@ -99,11 +98,11 @@ int32_t CharactersIO::Read(void *aBuffer, size_t aCount)
 
 /* Todo: Deep copy */
 /* Todo: Implement functions to change hardware port */
-void CharactersIO::Initialize()
+void CharactersIo::Initialize()
 {
 }
 
-void CharactersIO::HandleReceivedByte(uint8_t aReceivedByte)
+void CharactersIo::HandleReceivedByte(uint8_t aReceivedByte)
 {
 	CharactersIOErrorCode_t error    = CharactersIOErrorCode_t::ERROR_NONE;
 
@@ -161,11 +160,11 @@ void CharactersIO::HandleReceivedByte(uint8_t aReceivedByte)
 }
 
 /* Method-forwarding to lower layer */
-inline void CharactersIO::HandleReceivedByte(void *aContext, uint8_t aReceivedByte)
+inline void CharactersIo::HandleReceivedByte(void *aContext, uint8_t aReceivedByte)
 {
-    static_cast<CharactersIO *>(aContext)->HandleReceivedByte(aReceivedByte);
+    static_cast<CharactersIo *>(aContext)->HandleReceivedByte(aReceivedByte);
 }
 
-CharactersIO::~CharactersIO()
+CharactersIo::~CharactersIo()
 {
 }

@@ -1,19 +1,19 @@
 #pragma once
+#include <CharactersIoSerialConnection.h>
 #include <stdint.h>
 #include <stdlib.h>
 
 #include "../utilities/charactersio_config.hpp"
 #include "../utilities/charactersio_error_code.hpp"
-#include "charactersio_uart.hpp"
 
-class CharactersIO
+class CharactersIo
 {
 public:
     void Initialize(void);
-    CharactersIO(void);
+    CharactersIo(void);
     int32_t Write(const void *aBuffer, size_t aCount);
     int32_t Read(void *aBuffer, size_t aCount);
-    ~CharactersIO(void);
+    ~CharactersIo(void);
 
 private:
     enum {
