@@ -1,5 +1,10 @@
 #pragma once
-typedef enum CharactersIOErrorCode {
+
+namespace CharactersIo {
+
+//namespace DeviceLayer {
+
+enum CharactersIOErrorCode {
     ERROR_NONE,
     ERROR_FAILED,
 		ERROR_TRUE,
@@ -7,4 +12,7 @@ typedef enum CharactersIOErrorCode {
     ERROR_TX_BUSY,
 		ERROR_RX_BUSY,
 		ERROR_NOT_IMPLEMENTED
-} CharactersIOErrorCode_t;
+};
+
+}
+//}
