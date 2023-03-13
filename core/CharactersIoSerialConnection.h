@@ -3,9 +3,6 @@
 #include "CharactersIo.h"
 #include "../utilities/charactersio_error_code.hpp"
 
-class CharactersIoSerialConnectionImpl;
-class CharactersIoSerialConnection;
-
 class CharactersIoSerialConnection
 {
 	using ImplClass = CharactersIoSerialConnectionImpl;
@@ -16,8 +13,8 @@ public:
 	CharactersIOErrorCode_t HandleReceivedData(uint8_t const *aByte, uint16_t aByteCount);
 	CharactersIOErrorCode_t HandleReceivedData(uint8_t aByte);
 
-	CharactersIOErrorCode_t IsConnectedWithCharactersIo(void) const ;
-	CharactersIOErrorCode_t IsConnectedWithPlatform(void) const;
+	bool IsConnectedWithCharactersIo(void);
+	bool IsConnectedWithPlatform(void);
 	CharactersIOErrorCode_t ConnectWithCharactersIo(CharactersIo const &aCharactersIo);
 	CharactersIOErrorCode_t ConnectWithPlatform(void *aPlatform);
 
@@ -39,32 +36,17 @@ protected:
 
 inline CharactersIoSerialConnection &CharactersIoSerialConnection::GetInstance(void *aPlatform)
 {
-	return static_cast<ImplClass *>(this)->_GetInstance(aPlatform);
+	return ImplClass::_GetInstance(aPlatform);
 }
 
-inline CharactersIOErrorCode_t CharactersIoSerialConnection::IsConnectedWithCharactersIo(void)
+inline bool CharactersIoSerialConnection::IsConnectedWithCharactersIo(void)
 {
 	return static_cast<ImplClass *>(this)->_IsConnectedWithCharactersIo();
 }
 
-inline CharactersIOErrorCode_t CharactersIoSerialConnection::IsConnectedWithCharactersIo(void)
-{
-	return static_cast<ImplClass *>(this)->_IsConnectedWithCharactersIo();
-}
-
-inline CharactersIOErrorCode_t CharactersIoSerialConnection::IsConnectedWithPlatform(void)
+inline bool CharactersIoSerialConnection::IsConnectedWithPlatform(void)
 {
 	return static_cast<ImplClass *>(this)->_IsConnectedWithPlatform();
-}
-
-inline CharactersIOErrorCode_t CharactersIoSerialConnection::ConnectWithCharactersIo(CharactersIo *aCharactersIo)
-{
-	return static_cast<ImplClass *>(this)->_ConnectWithCharactersIo(CharactersIo *aCharactersIo);
-}
-
-inline CharactersIOErrorCode_t CharactersIoSerialConnection::IsConnectedWithCharactersIo(void *aPlatform)
-{
-	return static_cast<ImplClass *>(this)->_ConnectWithPlatform(aPlatform);
 }
 
 inline CharactersIOErrorCode_t CharactersIoSerialConnection::PushData(uint8_t const *aByte, uint16_t aByteCount)

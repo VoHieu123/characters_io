@@ -173,7 +173,6 @@ extern "C" void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t s
 
 CharactersIOErrorCode_t CharactersIoSerialConnectionImpl::_PushData(uint8_t const *aByte, uint16_t aByteCount)
 {
-	CharactersIOErrorCode_t error = ERROR_NONE;
 	UART_HandleTypeDef *huart = (UART_HandleTypeDef *) instanceInfo[mPlatformIndex].mPlatform;
 
 	return HAL_UART_Transmit(huart, aByte, aByteCount, HAL_MAX_DELAY) == HAL_OK ? ERROR_NONE : ERROR_TX_BUSY;
@@ -187,14 +186,21 @@ CharactersIOErrorCode_t CharactersIoSerialConnectionImpl::_PushData(uint8_t aByt
 	/* Check that a Tx process is not already ongoing */
 	if (huart->gState == HAL_UART_STATE_READY)
 	{
-		__HAL_LOCK(huart);
+		if(huart->Lock == HAL_LOCKED)
+		{
+			 return ERROR_TX_BUSY;
+		}
+		else
+		{
+			 huart->Lock = HAL_LOCKED;
+		}
 
 		huart->ErrorCode = HAL_UART_ERROR_NONE;
 		huart->TxXferSize = 1;
 		huart->TxXferCount = 1;
 		huart->gState = HAL_UART_STATE_BUSY_TX;
 
-		 __HAL_UNLOCK(huart);
+		huart->Lock = HAL_UNLOCKED;
 
 		while (!(huart->Instance->SR & UART_FLAG_TXE)) {}
 		huart->Instance->DR = (uint32_t) aByte;
@@ -214,10 +220,10 @@ CharactersIOErrorCode_t CharactersIoSerialConnectionImpl::_PushData(uint8_t aByt
 
 CharactersIOErrorCode_t CharactersIoSerialConnectionImpl::_HandleReceivedData(uint8_t const *aByte, uint16_t aByteCount)
 {
-
+	return ERROR_NONE;
 }
 
 CharactersIOErrorCode_t CharactersIoSerialConnectionImpl::_HandleReceivedData(uint8_t aByte)
 {
-
+	return ERROR_NONE;
 }

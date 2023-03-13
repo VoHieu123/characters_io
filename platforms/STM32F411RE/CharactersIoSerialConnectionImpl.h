@@ -14,10 +14,13 @@ public:
 	CharactersIoSerialConnectionImpl(void);
 	~CharactersIoSerialConnectionImpl(void);
 
+	uint8_t               mDmaBuffer[DMA_BUFFER_SIZE];
+	uint16_t              mDmaBufferOldPos = 0;
+
 private:
 
-	CharactersIOErrorCode_t _IsConnectedWithCharactersIo(void) const {return mCharactersIo != nullptr; }
-	CharactersIOErrorCode_t _IsConnectedWithPlatform(void) const {return mPlatformIndex != -1; }
+	bool _IsConnectedWithCharactersIo(void) const {return mCharactersIo != nullptr; }
+	bool _IsConnectedWithPlatform(void) const {return mPlatformIndex != -1; }
 	CharactersIOErrorCode_t _ConnectWithCharactersIo(CharactersIo const &aCharactersIo);
 	CharactersIOErrorCode_t _ConnectWithPlatform(void *aPlatform);
 
@@ -45,12 +48,10 @@ private:
 	} InstanceInfo_t;
 
 	static InstanceInfo_t instanceInfo[MAX_SERIAL_CONNECTION_COUNT];
-	static uint8_t mPlatformCount = 0;
+	static uint8_t mPlatformCount;
 
 	int16_t               mPlatformIndex = -1;
 	CharactersIo          *mCharactersIo;
-	uint8_t               mDmaBuffer[DMA_BUFFER_SIZE];
-	uint16_t              mDmaBufferOldPos = 0;
 
-	ImplClass * Impl() { return static_cast<ImplClass *>(this); }
+//	ImplClass * Impl() { return static_cast<ImplClass *>(this); }
 };

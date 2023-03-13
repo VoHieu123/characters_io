@@ -23,7 +23,7 @@ private:
     static inline void HandleReceivedByte(void *aContext, uint8_t aReceivedByte);
     void               HandleReceivedByte(uint8_t aReceivedByte);
 
-    CharactersIOUart mUartHandle;
+    CharactersIoSerialConnection mUartHandle;
     uint8_t            mBuffer[kStreamBufferSize];
     uint16_t           mBufferReadIndex;
     uint16_t           mBufferWriteIndex;
