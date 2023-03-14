@@ -36,6 +36,8 @@
 //#define XOFF 0x13u
 //
 
+/* Todo: Check if these objects are singleton */
+
 namespace CharactersIo {
 
 namespace DeviceLayer {
