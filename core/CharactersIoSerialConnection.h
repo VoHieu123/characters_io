@@ -25,8 +25,8 @@
 #pragma once
 
 /* Todo: Include needed libraries */
-#include <CharactersIoErrorCode.h>
-#include <CharactersIoInstance.h>
+#include "utilities/CharactersIoErrorCode.h"
+#include "CharactersIoInstance.h"
 #include <stdint.h>
 
 namespace CharactersIo {
@@ -59,6 +59,7 @@ protected:
 	CharactersIoSerialConnection &operator=(const CharactersIoSerialConnection &) = delete;
 
 public:
+	/* Todo: Implement Rx, Tx signal event */
 
 	/* Todo: HDLC? Implement decoder and encoder for this. A config struct is needed in order
 	 * to specify whether HDLC is enabled or not */

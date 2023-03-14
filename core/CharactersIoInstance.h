@@ -24,7 +24,7 @@
 
 #pragma once
 
-#include "CharactersIoErrorCode.h"
+#include "utilities/CharactersIoErrorCode.h"
 #include "CharactersIoSerialConnection.h"
 #include "stdint.h"
 
