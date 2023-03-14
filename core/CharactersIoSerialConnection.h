@@ -17,23 +17,10 @@ class CharactersIoInstance;
 class PlatformHandle;
 
 /* Todo: Include needed internal templates */
-//namespace Internal {
-//class BLEManagerImpl;
-//template <class>
-//class GenericPlatformManagerImpl;
-//template <class>
-//class GenericConfigurationManagerImpl;
-//template <class>
-//class GenericPlatformManagerImpl_FreeRTOS;
-//template <class>
-//class GenericConnectivityManagerImpl_Thread;
-//template <class>
-//class GenericThreadStackManagerImpl_OpenThread;
-//template <class>
-//class GenericThreadStackManagerImpl_OpenThread_LwIP;
-//template <class>
-//class GenericThreadStackManagerImpl_FreeRTOS;
-//} // namespace Internal
+namespace Internal {
+template <class>
+class GenericCharactersIoSerialConnectionImpl;
+} // namespace Internal
 
 class CharactersIoSerialConnection
 {
@@ -51,7 +38,12 @@ protected:
 
 public:
 
-	/* Todo: Singleton object */
+	/* Todo: HDLC? Implement decoder and encoder for this. A config struct is needed in order
+	 * to specify whether HDLC is enabled or not */
+	CharactersIOErrorCode PushData(void *aPlatformHandle, uint8_t const *aByte, uint16_t aByteCount);
+	CharactersIOErrorCode PushData(void *aPlatformHandle, uint8_t aByte);
+//	CharactersIOErrorCode PullData(void *aPlatformHandle, uint8_t const *aBuffer, uint16_t aByteCount);
+//	CharactersIOErrorCode PullData(void *aPlatformHandle, uint8_t aByte);
 
 	/* Todo: Dedicated struct for configuration */
 	struct CharactersIoConfigs
@@ -68,13 +60,6 @@ public:
 	void RemoveConnection(void *aPlatformHandle);
 
 private:
-
-	/* Todo: HDLC? Implement decoder and encoder for this. A config struct is needed in order
-	 * to specify whether HDLC is enabled or not */
-	CharactersIOErrorCode PushData(void *aPlatformHandle, uint8_t const *aByte, uint16_t aByteCount);
-	CharactersIOErrorCode PushData(void *aPlatformHandle, uint8_t aByte);
-	CharactersIOErrorCode HandleReceivedData(void *aPlatformHandle, uint8_t const *aByte, uint16_t aByteCount);
-	CharactersIOErrorCode HandleReceivedData(void *aPlatformHandle, uint8_t aByte);
 
 	/* Todo: Grand friend to all generic classes */
 //  template <class>
@@ -103,7 +88,7 @@ extern CharactersIoSerialConnectionImpl & GetCharactersIoSerialConnectionImpl(vo
 
 /* Todo: Include a header file containing the implementation of the object for the selected platform using Makefile. */
 
-#define CHARACTERSIO_DEVICE_LAYER_TARGET STM32F411RE /* Todo: Remove this */
+#define CHARACTERSIO_DEVICE_LAYER_TARGET STM32F411RE /* Todo: Remove this and specify all required symbols like this */
 
 #ifdef EXTERNAL_CHARACTERSIOSERIALCONNECTIONIMPL_HEADER
 #include EXTERNAL_CHARACTERSIOSERIALCONNECTIONIMPL_HEADER
@@ -142,22 +127,20 @@ inline CharactersIOErrorCode CharactersIoSerialConnection::PushData(void *aPlatf
 	return static_cast<ImplClass *>(this)->_PushData(aPlatformHandle, aByte, aByteCount);
 }
 
-
-inline CharactersIOErrorCode CharactersIoSerialConnection::HandleReceivedData(void *aPlatformHandle, uint8_t const *aByte, uint16_t aByteCount)
-{
-	return static_cast<ImplClass *>(this)->_HandleReceivedData(aPlatformHandle, aByte, aByteCount);
-}
-
 inline CharactersIOErrorCode CharactersIoSerialConnection::PushData(void *aPlatformHandle, uint8_t aByte)
 {
 	return static_cast<ImplClass *>(this)->_PushData(aPlatformHandle, aByte);
 }
 
-
-inline CharactersIOErrorCode CharactersIoSerialConnection::HandleReceivedData(void *aPlatformHandle, uint8_t aByte)
-{
-	return static_cast<ImplClass *>(this)->_HandleReceivedData(aPlatformHandle, aByte);
-}
+//inline CharactersIOErrorCode CharactersIoSerialConnection::PullData(void *aPlatformHandle, uint8_t const *aBuffer, uint16_t aByteCount)
+//{
+//	return static_cast<ImplClass *>(this)->_PullData(aPlatformHandle, aBuffer, aByteCount);
+//}
+//
+//inline CharactersIOErrorCode CharactersIoSerialConnection::PullData(void *aPlatformHandle, uint8_t aByte)
+//{
+//	return static_cast<ImplClass *>(this)->_PullData(aPlatformHandle, aByte);
+//}
 
 } // namespace DeviceLayer
 } // namespace CharactersIo

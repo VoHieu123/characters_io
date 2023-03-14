@@ -9,80 +9,70 @@
 #include "CharactersIoSerialConnectionImpl.h"
 #include "CharactersIoErrorCode.h"
 
+/* Todo: each dma_buffer should be correspond with 1 chars instance, right now setting to 1 instance
+ * so no need to seperate them */
+#define DMA_BUFFER_SIZE 16u /* Todo: should be in config.h */
+static uint16_t dmaBufferOldPos = 0;
+static uint8_t dmaBuffer[DMA_BUFFER_SIZE] = {0};
+
 /* Todo: Define in config file */
-#define MAX_CHARSIO_NUM 1u
+#define MAX_CHARSIO_NUM 1u /* Todo: This value equals the number of serial connection */
 
 namespace CharactersIo {
 
 namespace DeviceLayer {
 
-
 extern "C" void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
-//	UartContext_t* iostreamUartContext = static_cast<UartContext_t*>(CharactersIOUart::GetInstance(huart));
-//
-//	switch (huart->ErrorCode)
-//	{
-//		case HAL_UART_ERROR_NONE:
-//			break;
-//		case HAL_UART_ERROR_ORE:
-//			/* Todo: this should also be platform-dependent */
-//			__attribute__((fallthrough));
-//		case HAL_UART_ERROR_FE:
-//			__attribute__((fallthrough));
-//		case HAL_UART_ERROR_NE:
-//			__attribute__((fallthrough));
-//		case HAL_UART_ERROR_PE:
-//			__attribute__((fallthrough));
-//		case HAL_UART_ERROR_DMA:
-//			__attribute__((fallthrough));
-//		/* Undefined errors are treated as HAL_UART_ERROR_DMA */
-//		default:
-////      printf("Error: HAL_UART_ERROR: %d\n", huart->ErrorCode);
-//			iostreamUartContext->mDmaBufferOldPos = 0;
-//
-//			HAL_UARTEx_ReceiveToIdle_DMA(huart, iostreamUartContext->mDmaBuffer, DMA_BUFFER_SIZE);
-//			break;
-//	}
+	switch (huart->ErrorCode)
+	{
+		case HAL_UART_ERROR_NONE:
+			break;
+		case HAL_UART_ERROR_ORE:
+			/* Todo: this should also be platform-dependent */
+			__attribute__((fallthrough));
+		case HAL_UART_ERROR_FE:
+			__attribute__((fallthrough));
+		case HAL_UART_ERROR_NE:
+			__attribute__((fallthrough));
+		case HAL_UART_ERROR_PE:
+			__attribute__((fallthrough));
+		case HAL_UART_ERROR_DMA:
+			__attribute__((fallthrough));
+		/* Undefined errors are treated as HAL_UART_ERROR_DMA */
+		default:
+//      printf("Error: HAL_UART_ERROR: %d\n", huart->ErrorCode);
+			dmaBufferOldPos = 0;
+
+			HAL_UARTEx_ReceiveToIdle_DMA(huart, dmaBuffer, DMA_BUFFER_SIZE);
+			break;
+	}
 }
 
 extern "C" void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t size)
 {
-//	CharactersIoSerialConnectionImpl &implInstance = CharactersIoSerialConnection::GetInstance((void*) huart).Impl();
-//	uint32_t index             = 0;
-//	uint32_t numReceivedChars  = 0;
-//	uint16_t dmaBufferOldPos   = implInstance.mDmaBufferOldPos;
-//	uint8_t  *dmaBuffer        = implInstance.mDmaBuffer;
-//
-//
-//	/* Todo: each dma_buffer should be correspond with 1 platformUartHandle */
-//	if (size != dmaBufferOldPos)
-//	{
-//		if (size > dmaBufferOldPos)
-//		{
-//			numReceivedChars = size - dmaBufferOldPos;
-//			for (index = 0; index < numReceivedChars; index++)
-//			{
-//					PushDataToCharactersIOBuffer(implInstance, dmaBuffer[dmaBufferOldPos + index]);
-//			}
-//		}
-//		else
-//		{
-//			numReceivedChars = DMA_BUFFER_SIZE - dmaBufferOldPos;
-//			for (index = 0; index < numReceivedChars; index++)
-//			{
-//					PushDataToCharactersIOBuffer(implInstance, dmaBuffer[dmaBufferOldPos + index]);
-//			}
-//			if (size > 0)
-//			{
-//				for (index = 0; index < size; index++)
-//				{
-//						PushDataToCharactersIOBuffer(implInstance, dmaBuffer[index]);
-//				}
-//			}
-//		}
-//		implInstance.mDmaBufferOldPos = size;
-//  }
+	CharactersIoSerialConnectionImpl &impl = GetCharactersIoSerialConnectionImpl();
+	uint32_t index             = 0;
+	uint32_t numReceivedChars  = 0;
+
+	if (size != dmaBufferOldPos)
+	{
+		if (size > dmaBufferOldPos)
+		{
+			numReceivedChars = size - dmaBufferOldPos;
+			impl.HandleReceivedData(huart, &dmaBuffer[dmaBufferOldPos + index], numReceivedChars);
+		}
+		else
+		{
+			numReceivedChars = DMA_BUFFER_SIZE - dmaBufferOldPos;
+			impl.HandleReceivedData(huart, &dmaBuffer[dmaBufferOldPos + index], numReceivedChars);
+			if (size > 0)
+			{
+				impl.HandleReceivedData(huart, &dmaBuffer[index], size);
+			}
+		}
+		dmaBufferOldPos = size;
+  }
 }
 
 /* Anonymous namespace prevents accessibility of outside files */
@@ -92,7 +82,7 @@ alignas(alignof(CharactersIoInstance)) char sCharactersIoRaw[sizeof(CharactersIo
 
 CharactersIoSerialConnectionImpl::CharactersIoSerialConnectionImpl(void)
 {
-	mInstanceCount = 0;
+	sInstanceCount = 0;
 
 }
 
@@ -118,10 +108,12 @@ CharactersIoInstance
 {
 	/* Todo: Check if mInstaneCount > MAX */
 	CharactersIoInstance &newInstance =
-		*(new (&sCharactersIoRaw[mInstanceCount])
+		*(new (&sCharactersIoRaw[sInstanceCount])
 			CharactersIoInstance(aPlatformHandle));
 
-	mInstanceCount++;
+	sInstanceCount++;
+	/* Todo: Should have a function to start the transaction instead */
+	HAL_UARTEx_ReceiveToIdle_DMA((UART_HandleTypeDef *) aPlatformHandle, dmaBuffer, DMA_BUFFER_SIZE);
 
 	return newInstance;
 }
@@ -139,15 +131,16 @@ CharactersIoInstance
 	return _CreateNewConnection(aPlatformHandle, config);
 }
 
-CharactersIOErrorCode CharactersIoSerialConnectionImpl::_PushData(void *aPlatformHandle, uint8_t const *aByte, uint16_t aByteCount)
+CharactersIOErrorCode CharactersIoSerialConnectionImpl::_PushData(void *aPlatformHandle, uint8_t const *aBuffer, uint16_t aByteCount)
 {
 	UART_HandleTypeDef *huart = static_cast<UART_HandleTypeDef *> (aPlatformHandle);
 
-	return HAL_UART_Transmit(huart, aByte, aByteCount, HAL_MAX_DELAY) == HAL_OK ? ERROR_NONE : ERROR_TX_BUSY;
+	return HAL_UART_Transmit(huart, aBuffer, aByteCount, HAL_MAX_DELAY) == HAL_OK ? ERROR_NONE : ERROR_TX_BUSY;
 }
 
 CharactersIOErrorCode CharactersIoSerialConnectionImpl::_PushData(void *aPlatformHandle, uint8_t aByte)
 {
+	/* Todo: Check aPlatformHandle */
 	UART_HandleTypeDef *huart = (UART_HandleTypeDef *) aPlatformHandle;
 	CharactersIOErrorCode error = ERROR_NONE;
 
@@ -190,7 +183,7 @@ CharactersIoInstance *CharactersIoSerialConnectionImpl::PlatformHandleToInstance
 {
 	CharactersIoInstance *instance;
 
-	for (size_t i = 0; i < mInstanceCount; i++)
+	for (size_t i = 0; i < sInstanceCount; i++)
 	{
 		instance = &(((CharactersIoInstance *)sCharactersIoRaw)[i]);
 		if (instance->GetPlatformHandle() == aPlatformHandle)
@@ -202,8 +195,11 @@ CharactersIoInstance *CharactersIoSerialConnectionImpl::PlatformHandleToInstance
 	return instance;
 }
 
-/* Todo: apply code utils */
-CharactersIOErrorCode CharactersIoSerialConnectionImpl::_HandleReceivedData(void *aPlatformHandle, uint8_t const *aByte, uint16_t aByteCount)
+/* Todo: Apply code utils */
+/* Todo: Think about class friendship */
+CharactersIOErrorCode CharactersIoSerialConnectionImpl::HandleReceivedData(void *aPlatformHandle,
+																																			     uint8_t *aBuffer,
+																																				 	 uint16_t aByteCount) const
 {
 	CharactersIoInstance *instancePtr = nullptr;
 	CharactersIOErrorCode errorCode = ERROR_NONE;
@@ -212,7 +208,11 @@ CharactersIOErrorCode CharactersIoSerialConnectionImpl::_HandleReceivedData(void
 	if (instancePtr != nullptr)
 	{
 		CharactersIoInstance &instance = *(instancePtr);
-		(void) instance;
+
+		for (size_t i = 0; i < aByteCount; i++)
+		{
+			(void) instance;
+		}
 		errorCode = ERROR_NONE;
 	}
 	else
@@ -223,10 +223,15 @@ CharactersIOErrorCode CharactersIoSerialConnectionImpl::_HandleReceivedData(void
 	return errorCode;
 }
 
-CharactersIOErrorCode CharactersIoSerialConnectionImpl::_HandleReceivedData(void *aPlatformHandle, uint8_t aByte)
-{
-	return ERROR_NONE;
-}
+//CharactersIOErrorCode CharactersIoSerialConnectionImpl::_PullData(void *aPlatformHandle, uint8_t const *aBuffer, uint16_t aByteCount)
+//{
+//
+//}
+//
+//CharactersIOErrorCode CharactersIoSerialConnectionImpl::_PullData(void *aPlatformHandle, uint8_t aByte)
+//{
+//	return ERROR_NONE;
+//}
 
 } // CharactersIo
 } // DeviceLayer

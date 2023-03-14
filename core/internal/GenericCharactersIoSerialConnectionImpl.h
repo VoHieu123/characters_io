@@ -16,6 +16,7 @@ private:
 	inline ImplClass * Impl() { return static_cast<ImplClass *>(this); }
 };
 
+/* Todo: Further investigation on this? */
 // Instruct the compiler to instantiate the template only when explicitly told to do so.
 extern template class GenericCharactersIoSerialConnectionImpl<CharactersIoSerialConnectionImpl>;
 
