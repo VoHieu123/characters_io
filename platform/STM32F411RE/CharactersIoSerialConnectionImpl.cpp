@@ -45,7 +45,7 @@ namespace DeviceLayer {
 
 /* Todo: Explore about the below syntax */
 CharactersIoSerialConnectionImpl CharactersIoSerialConnectionImpl::sInstance;
-uint8_t CharactersIoSerialConnectionImpl::sInstanceCount = 0;
+uint8_t CharactersIoSerialConnectionImpl::sInstanceCount;
 
 extern "C" void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {

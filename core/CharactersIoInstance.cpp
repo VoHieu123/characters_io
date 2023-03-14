@@ -48,7 +48,7 @@ CharactersIoInstance::CharactersIoInstance(void *aPlatformHandle)
 	, mIsSoftwareFlowControlEnabled(false)
 	,	mIsRemoteXON(false)
 	, mCrShouldBeCrlf(false)
-	, mIsXON(false)
+	, mIsXON(true)
 {
 
 }
@@ -82,7 +82,7 @@ int32_t CharactersIoInstance::Write(const void *aBuffer, size_t aCount)
 			if (mIsXON)
 			{
 				/* Todo: Implement error ? */
-				serial.PushData(this, aBufferUnsigned[sentCount++]);
+				serial.PushData(mPlatformHandle, aBufferUnsigned[sentCount++]);
 			}
 		}
 	}
@@ -94,9 +94,9 @@ int32_t CharactersIoInstance::Write(const void *aBuffer, size_t aCount)
 			{
 				if (aBufferUnsigned[sentCount] == '\n')
 				{
-					serial.PushData(this, '\r');
+					serial.PushData(mPlatformHandle, '\r');
 				}
-				serial.PushData(this, aBufferUnsigned[sentCount++]);
+				serial.PushData(mPlatformHandle, aBufferUnsigned[sentCount++]);
 			}
 		}
 	}
