@@ -1,4 +1,26 @@
-/* Todo: Include MIT license */
+/* MIT License
+
+	Copyright (c) [2023] [Vo Tran Trung Hieu]
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
+
+*/
 
 #pragma once
 
@@ -16,11 +38,6 @@ inline void* operator new(size_t sz, void *p)
 namespace CharactersIo {
 namespace DeviceLayer {
 
-/* Todo: Define this in platform implementation */
-class PlatformHandle {
-
-};
-
 class CharactersIoSerialConnection;
 class CharactersIoSerialConnectionImpl;
 
@@ -29,11 +46,14 @@ public Internal::GenericCharactersIoSerialConnectionImpl<CharactersIoSerialConne
 {
 public:
 	friend CharactersIoSerialConnection;
+	friend CharactersIoInstance;
 	friend Internal::GenericCharactersIoSerialConnectionImpl<CharactersIoSerialConnectionImpl>;
 
-	/* Todo: Is there any differences between privately and publicly grand friend ? */
 	friend CharactersIoSerialConnection & ::CharactersIo::DeviceLayer::GetCharactersIoSerialConnection(void);
 	friend CharactersIoSerialConnectionImpl & ::CharactersIo::DeviceLayer::GetCharactersIoSerialConnectionImpl(void);
+
+	CharactersIoInstance *PlatformHandleToInstance(void *aPlatformHandle) const;
+	CharactersIOErrorCode HandleReceivedData(void *aPlatformHandle, uint8_t *aBuffer, uint16_t aByteCount) const;
 
 private:
 
@@ -44,14 +64,14 @@ private:
 
 	void _RemoveConnection(void *aPlatformHandle);
 
-	CharactersIOErrorCode _PushData(void *aPlatformHandle, uint8_t const *aByte, uint16_t aByteCount);
+	/* Todo: Add const */
+	CharactersIOErrorCode _PushData(void *aPlatformHandle, uint8_t const *aBuffer, uint16_t aByteCount);
 	CharactersIOErrorCode _PushData(void *aPlatformHandle, uint8_t aByte);
-	CharactersIOErrorCode _HandleReceivedData(void *aPlatformHandle, uint8_t const *aByte, uint16_t aByteCount);
-	CharactersIOErrorCode _HandleReceivedData(void *aPlatformHandle, uint8_t aByte);
+//	CharactersIOErrorCode _PullData(void *aPlatformHandle, uint8_t const *aBuffer, uint16_t aByteCount);
+//	CharactersIOErrorCode _PullData(void *aPlatformHandle, uint8_t aByte);
 
-	/* Initialize these value */
-	/* Todo: typedef uint8 */
-	static uint8_t mInstanceCount;
+	/* Todo: Typedef uint8 to specific use of our service */
+	static uint8_t sInstanceCount;
 	static CharactersIoSerialConnectionImpl sInstance;
 	CharactersIoSerialConnectionImpl(void);
 	~CharactersIoSerialConnectionImpl(void);
