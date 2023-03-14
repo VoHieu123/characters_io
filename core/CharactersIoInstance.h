@@ -2,6 +2,7 @@
 
 #include "CharactersIoErrorCode.h"
 #include "CharactersIoSerialConnection.h"
+#include "stdint.h"
 
 namespace CharactersIo {
 
@@ -23,8 +24,8 @@ class CharactersIoInstance
 //        kStreamBufferSize = CHARACTERSIO_BUFFER_SIZE
 //    };
 //
-//    static inline void HandleReceivedByte(void *aContext, uint8_t aReceivedByte);
-//    void               HandleReceivedByte(uint8_t aReceivedByte);
+    void HandleReceivedByte(uint8_t aReceivedByte);
+    void HandleReceivedByte(uint8_t *aReceivedBuffer, uint16_t aByteCount);
 //
 //    CharactersIoSerialConnection mUartHandle;
 //    uint8_t            mBuffer[kStreamBufferSize];
@@ -41,6 +42,8 @@ private:
 		CharactersIoInstance(void *aPlatformHandle);
 
 		void *mPlatformhandle;
+
+		void *GetPlatformHandle(void) const;
 };
 
 } // CharactersIo

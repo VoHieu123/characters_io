@@ -29,6 +29,7 @@ public Internal::GenericCharactersIoSerialConnectionImpl<CharactersIoSerialConne
 {
 public:
 	friend CharactersIoSerialConnection;
+	friend CharactersIoInstance;
 	friend Internal::GenericCharactersIoSerialConnectionImpl<CharactersIoSerialConnectionImpl>;
 
 	/* Todo: Is there any differences between privately and publicly grand friend ? */
@@ -48,6 +49,8 @@ private:
 	CharactersIOErrorCode _PushData(void *aPlatformHandle, uint8_t aByte);
 	CharactersIOErrorCode _HandleReceivedData(void *aPlatformHandle, uint8_t const *aByte, uint16_t aByteCount);
 	CharactersIOErrorCode _HandleReceivedData(void *aPlatformHandle, uint8_t aByte);
+
+	CharactersIoInstance *PlatformHandleToInstance(void *aPlatformHandle) const;
 
 	/* Initialize these value */
 	/* Todo: typedef uint8 */

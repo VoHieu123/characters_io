@@ -25,8 +25,14 @@ CharactersIoInstance::CharactersIoInstance(void *aPlatformHandle)
 {
 
 }
-CharactersIoInstance::~CharactersIoInstance()
+
+CharactersIoInstance::~CharactersIoInstance(void)
 {
+}
+
+void *CharactersIoInstance::GetPlatformHandle(void) const
+{
+	return mPlatformhandle;
 }
 //
 ///* Todo: Implement macros for debuging */
@@ -112,8 +118,14 @@ CharactersIoInstance::~CharactersIoInstance()
 //{
 //}
 //
-//void CharactersIo::HandleReceivedByte(uint8_t aReceivedByte)
-//{
+
+void CharactersIoInstance::HandleReceivedByte(uint8_t *aReceivedBuffer, uint16_t aByteCount)
+{
+
+}
+
+void CharactersIoInstance::HandleReceivedByte(uint8_t aReceivedByte)
+{
 //	CharactersIOErrorCode_t error    = CharactersIOErrorCode_t::ERROR_NONE;
 //
 //	(void) error;
@@ -167,7 +179,7 @@ CharactersIoInstance::~CharactersIoInstance()
 //			mIsRemoteXON = false;
 //		}
 //	}
-//}
+}
 //
 ///* Method-forwarding to lower layer */
 //inline void CharactersIo::HandleReceivedByte(void *aContext, uint8_t aReceivedByte)

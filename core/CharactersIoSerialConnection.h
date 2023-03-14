@@ -7,10 +7,6 @@
 #include <CharactersIoInstance.h>
 #include <stdint.h>
 
-
-//typedef uint8_t uint8_t;
-
-
 namespace CharactersIo {
 
 namespace DeviceLayer {
@@ -42,7 +38,6 @@ class PlatformHandle;
 class CharactersIoSerialConnection
 {
 	using ImplClass = CharactersIoSerialConnectionImpl;
-	friend CharactersIoInstance;
 
 protected:
 	// Construction/destruction limited to subclasses.

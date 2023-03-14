@@ -1,5 +1,6 @@
 /* Todo: License */
 
+
 #include "stm32f4xx.h"
 
 /* Todo: define USE_HAL_DRIVER */
@@ -185,10 +186,41 @@ CharactersIOErrorCode CharactersIoSerialConnectionImpl::_PushData(void *aPlatfor
 	return error;
 }
 
+CharactersIoInstance *CharactersIoSerialConnectionImpl::PlatformHandleToInstance(void *aPlatformHandle) const
+{
+	CharactersIoInstance *instance;
 
+	for (size_t i = 0; i < mInstanceCount; i++)
+	{
+		instance = &(((CharactersIoInstance *)sCharactersIoRaw)[i]);
+		if (instance->GetPlatformHandle() == aPlatformHandle)
+		{
+			break;
+		}
+	}
+
+	return instance;
+}
+
+/* Todo: apply code utils */
 CharactersIOErrorCode CharactersIoSerialConnectionImpl::_HandleReceivedData(void *aPlatformHandle, uint8_t const *aByte, uint16_t aByteCount)
 {
-	return ERROR_NONE;
+	CharactersIoInstance *instancePtr = nullptr;
+	CharactersIOErrorCode errorCode = ERROR_NONE;
+
+	instancePtr = PlatformHandleToInstance(aPlatformHandle);
+	if (instancePtr != nullptr)
+	{
+		CharactersIoInstance &instance = *(instancePtr);
+		(void) instance;
+		errorCode = ERROR_NONE;
+	}
+	else
+	{
+		errorCode = ERROR_FAILED;
+	}
+
+	return errorCode;
 }
 
 CharactersIOErrorCode CharactersIoSerialConnectionImpl::_HandleReceivedData(void *aPlatformHandle, uint8_t aByte)
