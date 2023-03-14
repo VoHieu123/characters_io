@@ -30,7 +30,7 @@ class CommandsManager {
 
 public:
 
-	static CommandsManager & CommandsManager::GetInstance(void) const;
+	static CommandsManager & GetInstance(void);
 	/* Todo: Try state machine */
 	/* Todo: Functions to
 	 *           + Add command and handler

@@ -28,7 +28,7 @@ namespace CharactersIo {
 
 CommandsManager CommandsManager::sInstance;
 
-static CommandsManager & CommandsManager::GetInstance(void) const
+CommandsManager & CommandsManager::GetInstance(void)
 {
 	return sInstance;
 }
