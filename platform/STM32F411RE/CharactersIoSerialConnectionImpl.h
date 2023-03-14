@@ -56,7 +56,8 @@ public:
 	CharactersIOErrorCode HandleReceivedData(void *aPlatformHandle, uint8_t *aBuffer, uint16_t aByteCount) const;
 
 private:
-
+	CharactersIoSerialConnectionImpl(void);
+	~CharactersIoSerialConnectionImpl(void);
 	void _Init(void);
 
 	CharactersIoInstance &_CreateNewConnection(void *aPlatformHandle, struct CharactersIoConfigs &aIoConfig);
@@ -73,8 +74,6 @@ private:
 	/* Todo: Typedef uint8 to specific use of our service */
 	static uint8_t sInstanceCount;
 	static CharactersIoSerialConnectionImpl sInstance;
-	CharactersIoSerialConnectionImpl(void);
-	~CharactersIoSerialConnectionImpl(void);
 
 };
 
