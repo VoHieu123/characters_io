@@ -24,9 +24,9 @@
 
 #pragma once
 
-#include "CharactersIoSerialConnection.h"
+#include "core/CharactersIoSerialConnection.h"
 /* Todo: Think about the folder structure and names */
-#include <GenericCharactersIoSerialConnectionImpl.h>
+#include "core/internal/GenericCharactersIoSerialConnectionImpl.h"
 /* Todo: Must be included and must be inline-ed to overload "new" operator */
 #include <cstddef>
 

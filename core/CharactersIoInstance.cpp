@@ -22,10 +22,10 @@
 
 */
 
-//#include <assert.h>
-#include <CharactersIoInstance.h>
 #include <assert.h>
+#include "CharactersIoInstance.h"
 #include "CharactersIoSerialConnection.h"
+/*Todo: Add interupt handling */
 ////#include "interrupt_handling.h"
 //#define DECLARE_IRQ_STATE
 //#define	ENTER_NO_INTERRUPTS_SECTION()

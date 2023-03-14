@@ -26,9 +26,9 @@
 
 /* Todo: define USE_HAL_DRIVER */
 
-#include "CharactersIoSerialConnection.h"
+#include "core/CharactersIoSerialConnection.h"
 #include "CharactersIoSerialConnectionImpl.h"
-#include "CharactersIoErrorCode.h"
+#include "utilities/CharactersIoErrorCode.h"
 
 /* Todo: each dma_buffer should be correspond with 1 chars instance, right now setting to 1 instance
  * so no need to seperate them */
