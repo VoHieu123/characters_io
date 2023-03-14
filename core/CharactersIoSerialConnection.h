@@ -44,10 +44,10 @@ template <class>
 class GenericCharactersIoSerialConnectionImpl;
 } // namespace Internal
 
+/* Todo: Rename */
 class CharactersIoSerialConnection
 {
 	using ImplClass = CharactersIoSerialConnectionImpl;
-
 protected:
 	// Construction/destruction limited to subclasses.
 	CharactersIoSerialConnection()  = default;
@@ -76,8 +76,8 @@ public:
 	void Init(void);
 
 	/* Todo: Implementation of this function should be in template file */
-	CharactersIoInstance &CreateNewConnection(void *aPlatformHandle, struct CharactersIoConfigs &aIoConfig);
-	CharactersIoInstance &CreateNewConnection(void *aPlatformHandle); // Default config
+	CharactersIoInstance & CreateNewConnection(void *aPlatformHandle, struct CharactersIoConfigs &aIoConfig);
+	CharactersIoInstance & CreateNewConnection(void *aPlatformHandle); // Default config
 
 	void RemoveConnection(void *aPlatformHandle);
 

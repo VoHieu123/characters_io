@@ -43,6 +43,10 @@ namespace CharactersIo {
 
 namespace DeviceLayer {
 
+/* Todo: Explore about the below syntax */
+CharactersIoSerialConnectionImpl CharactersIoSerialConnectionImpl::sInstance;
+uint8_t CharactersIoSerialConnectionImpl::sInstanceCount;
+
 extern "C" void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
 	switch (huart->ErrorCode)
@@ -103,13 +107,10 @@ alignas(alignof(CharactersIoInstance)) char sCharactersIoRaw[sizeof(CharactersIo
 
 CharactersIoSerialConnectionImpl::CharactersIoSerialConnectionImpl(void)
 {
-	sInstanceCount = 0;
-
 }
 
 CharactersIoSerialConnectionImpl::~CharactersIoSerialConnectionImpl(void)
 {
-
 }
 
 void CharactersIoSerialConnectionImpl::_Init(void)
