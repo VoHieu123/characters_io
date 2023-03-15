@@ -51,6 +51,7 @@ public:
 
 	static bool SetDefault(uint8_t aInstanceId);
 	static bool SetDefault(CharactersIoInstance &aInstance);
+	/* Todo: Get default instance ?; Redirect stdio.h? */
 	static int8_t GetDefault(void);
 
 	uint8_t GetId(void) const { return mInstanceId; }
