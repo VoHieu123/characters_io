@@ -24,16 +24,10 @@
 
 #pragma once
 
+#include "utilities/New.hpp"
 #include "core/CharactersIoSerialConnection.h"
 /* Todo: Think about the folder structure and names */
 #include "core/internal/GenericCharactersIoSerialConnectionImpl.h"
-/* Todo: Must be included and must be inline-ed to overload "new" operator */
-#include <cstddef>
-
-inline void* operator new(size_t sz, void *p)
-{
-	return p;
-}
 
 namespace CharactersIo {
 namespace DeviceLayer {
@@ -53,6 +47,7 @@ public:
 	friend CharactersIoSerialConnectionImpl & ::CharactersIo::DeviceLayer::GetCharactersIoSerialConnectionImpl(void);
 
 	CharactersIoInstance *PlatformHandleToInstance(void *aPlatformHandle) const;
+	/* Todo: Prevent other instance to use this function by granting friend to specific functions */
 	CharactersIOErrorCode HandleReceivedData(void *aPlatformHandle, uint8_t *aBuffer, uint16_t aByteCount) const;
 
 private:

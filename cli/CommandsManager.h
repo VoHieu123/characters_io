@@ -26,17 +26,29 @@
 
 namespace CharactersIo {
 
-//namespace DeviceLayer {
+class CommandsManager {
 
-enum CharactersIOErrorCode {
-    ERROR_NONE,
-    ERROR_FAILED,
-		ERROR_TRUE,
-		ERROR_FALSE,
-    ERROR_TX_BUSY,
-		ERROR_RX_BUSY,
-		ERROR_NOT_IMPLEMENTED
+public:
+
+	static CommandsManager & GetInstance(void);
+	/* Todo: Try state machine */
+	/* Todo: Functions to
+	 *           + Add command and handler
+	 *           + Configure features
+	 */
+
+private:
+
+	CommandsManager() = default;
+	~CommandsManager() = default;
+
+	static CommandsManager sInstance;
+
+	/* Todo: check if below lines are effected by private, public, protected keyword */
+	// No copy, move or assignment.
+	CommandsManager(const CommandsManager &) = delete;
+	CommandsManager(const CommandsManager &&) = delete;
+	CommandsManager &operator=(const CommandsManager &) = delete;
 };
 
-}
-//}
+} // CharactersIo

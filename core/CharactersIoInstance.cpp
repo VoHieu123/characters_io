@@ -36,9 +36,14 @@
 //#define XOFF 0x13u
 //
 
+/* Todo: Check if these objects are singleton */
+
 namespace CharactersIo {
 
 namespace DeviceLayer {
+
+uint8_t CharactersIoInstance::sInstanceLastId = 0;
+int8_t CharactersIoInstance::sDefaultId = -1;
 
 CharactersIoInstance::CharactersIoInstance(void *aPlatformHandle)
 	: mPlatformHandle(aPlatformHandle)
@@ -50,11 +55,62 @@ CharactersIoInstance::CharactersIoInstance(void *aPlatformHandle)
 	, mCrShouldBeCrlf(false)
 	, mIsXON(true)
 {
-
+	mInstanceId = sInstanceLastId;
+	sInstanceLastId++;
 }
 
 CharactersIoInstance::~CharactersIoInstance(void)
 {
+	sDefaultId = (sDefaultId == mInstanceId) ? -1 : sDefaultId;
+}
+
+int CharactersIoInstance::PutChar(int aChar)
+{
+	int writeCount = -1;
+
+	writeCount = Write(&aChar, 1);
+
+	return writeCount;
+}
+
+int CharactersIoInstance::GetChar(void)
+{
+	int buffer = -1;
+
+	(void) Read(&buffer, 1);
+
+	return buffer;
+}
+
+int CharactersIoInstance::Printf(const char *aFormat, ...)
+{
+	/* Todo: Later */
+	return -1;
+}
+
+bool CharactersIoInstance::SetDefault(uint8_t aInstanceId)
+{
+	if (aInstanceId < sInstanceLastId)
+	{
+		sDefaultId = aInstanceId;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool CharactersIoInstance::SetDefault(CharactersIoInstance &aInstance)
+{
+	sDefaultId = aInstance.mInstanceId;
+
+	return true;
+}
+
+int8_t CharactersIoInstance::GetDefault(void)
+{
+	return sDefaultId;
 }
 
 void *CharactersIoInstance::GetPlatformHandle(void) const
@@ -62,15 +118,15 @@ void *CharactersIoInstance::GetPlatformHandle(void) const
 	return mPlatformHandle;
 }
 
-/* Todo: Implement macros for debuging */
-int32_t CharactersIoInstance::Write(const void *aBuffer, size_t aCount)
+/* Todo: Implement macros for debugging */
+int CharactersIoInstance::Write(const void *aBuffer, size_t aCount)
 {
 	CharactersIoSerialConnection &serial = GetCharactersIoSerialConnection();
 	size_t         sentCount  = 0;
 	const uint8_t *aBufferUnsigned = static_cast <const uint8_t*> (aBuffer);
 
-	/* Sanity check */
-	if (aBuffer == nullptr || aCount == 0)
+	/* Todo: Check serial instance */
+	if (aBuffer == nullptr)
 	{
 			return -1;
 	}
@@ -101,7 +157,7 @@ int32_t CharactersIoInstance::Write(const void *aBuffer, size_t aCount)
 		}
 	}
 
-	return sentCount;
+	return (int) sentCount;
 }
 
 bool CharactersIoInstance::PopDataFromBuffer(uint8_t *aOutputByte)
@@ -136,9 +192,8 @@ bool CharactersIoInstance::PopDataFromBuffer(uint8_t *aOutputByte)
 	return true;
 }
 
-
 /* Todo: Write documentations and UML to explain the algorithms */
-int32_t CharactersIoInstance::Read(void *aBuffer, size_t aCount)
+int CharactersIoInstance::Read(void *aBuffer, size_t aCount)
 {
 	uint16_t byteRead = 0;
 	uint8_t *aBufferUnsigned = nullptr;
@@ -156,7 +211,7 @@ int32_t CharactersIoInstance::Read(void *aBuffer, size_t aCount)
 		}
 	}
 
-	return byteRead;
+	return (int) byteRead;
 }
 
 /* Todo: Remove this or not? */

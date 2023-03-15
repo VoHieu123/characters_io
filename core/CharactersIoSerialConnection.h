@@ -155,6 +155,7 @@ inline CharactersIOErrorCode CharactersIoSerialConnection::PushData(void *aPlatf
 	return static_cast<ImplClass *>(this)->_PushData(aPlatformHandle, aByte);
 }
 
+/* Todo: Register a callback to handle received data */
 //inline CharactersIOErrorCode CharactersIoSerialConnection::PullData(void *aPlatformHandle, uint8_t const *aBuffer, uint16_t aByteCount)
 //{
 //	return static_cast<ImplClass *>(this)->_PullData(aPlatformHandle, aBuffer, aByteCount);

@@ -24,19 +24,14 @@
 
 #pragma once
 
-namespace CharactersIo {
+template <class T>
+class NonCopyable
+{
+  public:
+    NonCopyable (const NonCopyable &) = delete;
+    T & operator = (const T &) = delete;
 
-//namespace DeviceLayer {
-
-enum CharactersIOErrorCode {
-    ERROR_NONE,
-    ERROR_FAILED,
-		ERROR_TRUE,
-		ERROR_FALSE,
-    ERROR_TX_BUSY,
-		ERROR_RX_BUSY,
-		ERROR_NOT_IMPLEMENTED
+  protected:
+    NonCopyable () = default;
+    ~NonCopyable () = default; /// Protected non-virtual destructor
 };
-
-}
-//}

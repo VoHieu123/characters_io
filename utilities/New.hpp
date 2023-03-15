@@ -23,20 +23,10 @@
 */
 
 #pragma once
+/* Todo: Must be included and must be inline-ed to overload "new" operator */
+#include <cstddef>
 
-namespace CharactersIo {
-
-//namespace DeviceLayer {
-
-enum CharactersIOErrorCode {
-    ERROR_NONE,
-    ERROR_FAILED,
-		ERROR_TRUE,
-		ERROR_FALSE,
-    ERROR_TX_BUSY,
-		ERROR_RX_BUSY,
-		ERROR_NOT_IMPLEMENTED
-};
-
+inline void* operator new(size_t sz, void *p)
+{
+	return p;
 }
-//}
