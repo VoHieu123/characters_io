@@ -27,6 +27,7 @@
 #include "utilities/CharactersIoErrorCode.h"
 #include "CharactersIoSerialConnection.h"
 #include "stdint.h"
+#include <sys/types.h>
 
 namespace CharactersIo {
 
@@ -41,8 +42,18 @@ public:
 //    void Initialize(void);
 
 	/* Todo: Implement features-enable function */
-	int32_t Write(const void *aBuffer, size_t aCount);
-	int32_t Read(void *aBuffer, size_t aCount);
+	ssize_t Write(const void *aBuffer, size_t aCount);
+	ssize_t Read(void *aBuffer, size_t aCount);
+	/* Todo: All functions in stdio.h */
+	int PutChar(int aChar);
+	int GetChar(void);
+	int Printf(const char *aFormat, ...);
+
+	static bool SetDefault(uint8_t aInstanceId);
+	static bool SetDefault(CharactersIoInstance &aInstance);
+	static int8_t GetDefault(void);
+
+	uint8_t GetId(void) const { return mInstanceId; }
 
 private:
 
@@ -67,6 +78,11 @@ private:
 	bool      mIsRemoteXON;
 	bool 	    mCrShouldBeCrlf;
 	bool      mIsXON;
+	/* Todo: Typedef */
+	int8_t   mInstanceId;
+
+	static uint8_t sInstanceLastId;
+	static int8_t sDefaultId;
 
 	void *GetPlatformHandle(void) const;
 
