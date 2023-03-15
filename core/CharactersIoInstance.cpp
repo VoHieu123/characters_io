@@ -192,7 +192,6 @@ bool CharactersIoInstance::PopDataFromBuffer(uint8_t *aOutputByte)
 	return true;
 }
 
-
 /* Todo: Write documentations and UML to explain the algorithms */
 int CharactersIoInstance::Read(void *aBuffer, size_t aCount)
 {

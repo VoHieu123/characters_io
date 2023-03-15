@@ -144,7 +144,7 @@ CharactersIoInstance
 CharactersIoInstance
 &CharactersIoSerialConnectionImpl::_CreateNewConnection(void *aPlatformHandle)
 {
-	/* Todo: Set default config */
+	/* Todo: Set default configs */
 	struct CharactersIoConfigs config =
 	{
 

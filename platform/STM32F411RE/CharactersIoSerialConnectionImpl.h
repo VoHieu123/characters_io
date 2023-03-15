@@ -47,6 +47,7 @@ public:
 	friend CharactersIoSerialConnectionImpl & ::CharactersIo::DeviceLayer::GetCharactersIoSerialConnectionImpl(void);
 
 	CharactersIoInstance *PlatformHandleToInstance(void *aPlatformHandle) const;
+	/* Todo: Prevent other instance to use this function by granting friend to specific functions */
 	CharactersIOErrorCode HandleReceivedData(void *aPlatformHandle, uint8_t *aBuffer, uint16_t aByteCount) const;
 
 private:
