@@ -22,9 +22,8 @@
 
 */
 
+#include <platform/STM32F411RE/PlatformSerialConnectionConfig.h>
 #include "stm32f4xx.h"
-
-/* Todo: define USE_HAL_DRIVER */
 
 #include "core/CharactersIoSerialConnection.h"
 #include "CharactersIoSerialConnectionImpl.h"
@@ -32,20 +31,15 @@
 
 /* Todo: each dma_buffer should be correspond with 1 chars instance, right now setting to 1 instance
  * so no need to seperate them */
-#define DMA_BUFFER_SIZE 16u /* Todo: should be in config.h */
 static uint16_t dmaBufferOldPos = 0;
 static uint8_t dmaBuffer[DMA_BUFFER_SIZE] = {0};
-
-/* Todo: Define in config file */
-#define MAX_CHARSIO_NUM 1u /* Todo: This value equals the number of serial connection */
 
 namespace CharactersIo {
 
 namespace DeviceLayer {
 
-/* Todo: Explore about the below syntax */
 CharactersIoSerialConnectionImpl CharactersIoSerialConnectionImpl::sInstance;
-uint8_t CharactersIoSerialConnectionImpl::sInstanceCount;
+uint8_t CharactersIoSerialConnectionImpl::sIoInstanceCount;
 
 extern "C" void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
@@ -130,17 +124,16 @@ CharactersIoInstance
 {
 	/* Todo: Check if mInstaneCount > MAX */
 	CharactersIoInstance &newInstance =
-		*(new (&sCharactersIoRaw[sInstanceCount])
+		*(new (&sCharactersIoRaw[sIoInstanceCount])
 			CharactersIoInstance(aPlatformHandle));
 
-	sInstanceCount++;
+	sIoInstanceCount++;
 	/* Todo: Should have a function to start the transaction instead */
 	HAL_UARTEx_ReceiveToIdle_DMA((UART_HandleTypeDef *) aPlatformHandle, dmaBuffer, DMA_BUFFER_SIZE);
 
 	return newInstance;
 }
 
-/* Todo: Prevent the initialization of CharactersIo instance outside this function */
 CharactersIoInstance
 &CharactersIoSerialConnectionImpl::_CreateNewConnection(void *aPlatformHandle)
 {
@@ -153,6 +146,8 @@ CharactersIoInstance
 	return _CreateNewConnection(aPlatformHandle, config);
 }
 
+/* Todo: Remove redundance */
+/* Todo: Seperate CLI service from this service */
 CharactersIOErrorCode CharactersIoSerialConnectionImpl::_PushData(void *aPlatformHandle, uint8_t const *aBuffer, uint16_t aByteCount)
 {
 	UART_HandleTypeDef *huart = static_cast<UART_HandleTypeDef *> (aPlatformHandle);
@@ -205,7 +200,7 @@ CharactersIoInstance *CharactersIoSerialConnectionImpl::PlatformHandleToInstance
 {
 	CharactersIoInstance *instance;
 
-	for (size_t i = 0; i < sInstanceCount; i++)
+	for (size_t i = 0; i < sIoInstanceCount; i++)
 	{
 		instance = &(((CharactersIoInstance *)sCharactersIoRaw)[i]);
 		if (instance->GetPlatformHandle() == aPlatformHandle)

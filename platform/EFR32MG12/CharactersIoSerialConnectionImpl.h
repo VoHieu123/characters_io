@@ -26,7 +26,6 @@
 
 #include "utilities/New.hpp"
 #include "core/CharactersIoSerialConnection.h"
-/* Todo: Think about the folder structure and names */
 #include "core/internal/GenericCharactersIoSerialConnectionImpl.h"
 
 namespace CharactersIo {
@@ -46,10 +45,6 @@ public:
 	friend CharactersIoSerialConnection & ::CharactersIo::DeviceLayer::GetCharactersIoSerialConnection(void);
 	friend CharactersIoSerialConnectionImpl & ::CharactersIo::DeviceLayer::GetCharactersIoSerialConnectionImpl(void);
 
-	CharactersIoInstance *PlatformHandleToInstance(void *aPlatformHandle) const;
-	/* Todo: Prevent other instance to use this function by granting friend to specific functions */
-	CharactersIOErrorCode HandleReceivedData(void *aPlatformHandle, uint8_t *aBuffer, uint16_t aByteCount) const;
-
 private:
 	CharactersIoSerialConnectionImpl(void);
 	~CharactersIoSerialConnectionImpl(void);
@@ -60,13 +55,11 @@ private:
 
 	void _RemoveConnection(void *aPlatformHandle);
 
-	/* Todo: Add const */
 	CharactersIOErrorCode _PushData(void *aPlatformHandle, uint8_t const *aBuffer, uint16_t aByteCount);
 	CharactersIOErrorCode _PushData(void *aPlatformHandle, uint8_t aByte);
 //	CharactersIOErrorCode _PullData(void *aPlatformHandle, uint8_t const *aBuffer, uint16_t aByteCount);
 //	CharactersIOErrorCode _PullData(void *aPlatformHandle, uint8_t aByte);
 
-	/* Todo: Typedef uint8 to specific use of our service */
 	static uint8_t sIoInstanceCount;
 	static CharactersIoSerialConnectionImpl sInstance;
 
