@@ -48,7 +48,7 @@ public:
 	int PutChar(int aChar);
 	int GetChar(void);
 	int Printf(const char *aFormat, ...);
-
+	/* Todo: Add build system */
 	static bool SetDefault(uint8_t aInstanceId);
 	static bool SetDefault(CharactersIoInstance &aInstance);
 	/* Todo: Get default instance ?; Redirect stdio.h? */
